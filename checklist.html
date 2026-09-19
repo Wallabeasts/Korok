@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Hyrule">
+<meta name="theme-color" content="#020609">
+<title>Hyrule Completion</title>
+<style>
+  :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);background:#000}
+  html{scroll-padding-top:env(safe-area-inset-top,0px);background:#000}
+  body{margin:0;background:#000;min-height:100%}
+</style>
+</head>
+<body>
+<div id="app"><div class="boot">▸ SHEIKAH SLATE · LINKING</div></div>
+
+<style>
+  #app{
+    --void:#020609; --line:#10303F; --cy:#5FE3F5; --cy2:#2FA9C4; --cydim:#17485C;
+    --gold:#E6C378; --gold2:#B98B2E; --gold3:#7A5A1C;
+    --am:#FF9A3C; --leaf:#95D268; --bone:#DCEFF6; --mute:#5D8095;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --sans:"Avenir Next","Futura","Segoe UI",system-ui,sans-serif;
+    font-family:var(--sans);color:var(--bone);background:#000;border-radius:16px;
+    max-width:560px;margin:0 auto;padding:6px;font-variant-numeric:tabular-nums;
+    -webkit-font-smoothing:antialiased;
+  }
+  #app .boot{color:var(--cy);text-align:center;padding:70px 0;font-size:11px;letter-spacing:.3em}
+  #app button{font:inherit;cursor:pointer;color:var(--bone);background:none;border:none}
+  #app button:focus-visible{outline:1px solid var(--cy);outline-offset:2px}
+
+  #app .frame{position:relative;padding:26px;border-radius:12px;
+    background:radial-gradient(120% 80% at 50% 0%,#0A1A24,#020609 70%)}
+  #app .orn{position:absolute;pointer-events:none;z-index:4;
+    filter:drop-shadow(0 0 5px rgba(95,227,245,.55))}
+  #app .orn.t{top:0;left:0;right:0;height:26px}
+  #app .orn.b{bottom:0;left:0;right:0;height:26px;transform:scaleY(-1)}
+  #app .orn.l{top:0;bottom:0;left:0;width:26px}
+  #app .orn.r{top:0;bottom:0;right:0;width:26px;transform:scaleX(-1)}
+
+  #app .screen{position:relative;overflow:hidden;border-radius:4px;padding:13px 12px 0;
+    background:radial-gradient(130% 55% at 50% -6%,rgba(95,227,245,.13),transparent 60%),
+      linear-gradient(#040D14,#020609);
+    box-shadow:0 0 0 1px rgba(95,227,245,.28),0 0 0 2px rgba(122,90,28,.5),
+               0 0 44px rgba(95,227,245,.07) inset}
+  #app .screen::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:9;opacity:.45;
+    background:repeating-linear-gradient(to bottom,rgba(95,227,245,.06) 0 1px,transparent 1px 3px)}
+  #app .sweep{position:absolute;inset:0;z-index:10;pointer-events:none;height:40%;
+    background:linear-gradient(to bottom,transparent,rgba(95,227,245,.45),transparent);
+    animation:sweep 1.15s ease-out forwards}
+  @keyframes sweep{0%{transform:translateY(-120%);opacity:.9}100%{transform:translateY(300%);opacity:0}}
+
+  #app .hud{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}
+  #app .hud .blk{font-size:10px;letter-spacing:.16em;color:var(--cy);line-height:1.35}
+  #app .hud .blk.r{text-align:right}
+  #app .hud .v{font-family:var(--serif);font-size:15px;color:#EAF8FC}
+  #app .gl{display:block;height:7px;opacity:.85;margin:2px 0 5px}
+
+  #app .big{text-align:center;padding:6px 0 12px;border-top:1px solid var(--cydim);
+    border-bottom:1px solid var(--cydim);margin-bottom:14px}
+  #app .dial{position:relative;width:200px;height:200px;margin:2px auto 0}
+  #app .dial svg{position:absolute;inset:0}
+  #app .dial .rot{transform:rotate(-90deg);transform-origin:100px 100px}
+  #app .dial .arc{transition:stroke-dashoffset .6s cubic-bezier(.22,.8,.3,1);
+    filter:drop-shadow(0 0 7px rgba(149,210,104,.85))}
+  #app .dial .halo{animation:breathe 4.5s ease-in-out infinite}
+  @keyframes breathe{0%,100%{opacity:.12}50%{opacity:.34}}
+  #app .dial .spin{animation:spin 48s linear infinite;transform-origin:100px 100px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  #app .dial .mid{position:absolute;inset:24px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center}
+  #app .big .pc{font-family:var(--serif);font-size:40px;line-height:1;color:#EAF8FC;
+    letter-spacing:-.02em;text-shadow:0 0 26px rgba(95,227,245,.45)}
+  #app .big .lb{font-size:8px;letter-spacing:.28em;color:var(--cy2);margin-top:9px}
+  #app .big .sub{font-size:10px;letter-spacing:.1em;color:var(--mute);margin-top:4px}
+  #app .dial.hit .pc{animation:flash .55s ease}
+  @keyframes flash{0%{color:#5FE3F5;text-shadow:0 0 44px rgba(95,227,245,1)}100%{}}
+
+  #app .tabs{display:flex;align-items:center;gap:6px;padding:7px 0 0;
+    border-top:1px solid var(--cydim);border-bottom:1px solid var(--cydim);margin-bottom:13px}
+  #app .tabs button{flex:1;padding:5px 2px 8px;font-size:10px;letter-spacing:.18em;color:var(--mute);
+    border-bottom:2px solid transparent;margin-bottom:-1px}
+  #app .tabs button.on{color:#EAF8FC;border-bottom-color:var(--cy);text-shadow:0 0 10px rgba(95,227,245,.8)}
+  #app .pane{display:none;padding-bottom:12px} #app .pane.on{display:block}
+
+  #app h4{font-size:9px;letter-spacing:.26em;color:var(--cy2);font-weight:400;margin:0 0 10px;
+    display:flex;align-items:center;gap:8px}
+  #app h4::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--cydim),transparent)}
+
+  #app .it{padding:11px 10px 10px;margin-bottom:5px;border-left:2px solid var(--cydim);
+    background:linear-gradient(90deg,rgba(8,24,34,.95),rgba(8,24,34,.2))}
+  #app .it.done{border-left-color:var(--leaf);
+    background:linear-gradient(90deg,rgba(149,210,104,.14),transparent)}
+  #app .it .top{display:flex;align-items:flex-start;gap:9px}
+  #app .it .nm{flex:1;min-width:0;font-family:var(--serif);font-size:15.5px;color:var(--gold);
+    line-height:1.25}
+  #app .it.done .nm{color:var(--leaf)}
+  #app .it .ct{font-size:11px;color:var(--mute);white-space:nowrap;padding-top:3px}
+  #app .it .ct b{font-family:var(--serif);font-size:15px;color:var(--bone)}
+  #app .it.done .ct b{color:var(--leaf)}
+  #app .it .btn{width:30px;height:28px;font-size:15px;color:var(--cy2);
+    border:1px solid var(--cydim);flex:0 0 auto}
+  #app .it .btn:active{color:var(--cy);border-color:var(--cy)}
+  #app .it .btn.ten{width:34px;font-size:11px;letter-spacing:.04em}
+  #app .it .note{display:block;font-size:11px;line-height:1.45;color:var(--mute);margin-top:4px}
+  #app .it .bar{display:block;height:2px;background:#0C2531;margin-top:9px}
+  #app .it .bar{position:relative}
+  #app .it .bar em{display:block;height:100%;background:var(--cy);position:relative;overflow:hidden;
+    box-shadow:0 0 7px rgba(95,227,245,.8);transition:width .4s cubic-bezier(.22,.8,.3,1)}
+  #app .it .bar em::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);
+    transform:translateX(-100%);animation:shimmer 3.4s ease-in-out infinite}
+  @keyframes shimmer{0%{transform:translateX(-100%)}55%,100%{transform:translateX(320%)}}
+  #app .it.lit{animation:ignite .6s ease}
+  @keyframes ignite{0%{background:rgba(95,227,245,.3)}100%{}}
+  #app .it.done .bar em{background:var(--leaf);box-shadow:0 0 7px rgba(149,210,104,.8)}
+  #app .it .wt{font-size:9.5px;letter-spacing:.1em;color:var(--cy2);margin-top:6px;display:block}
+
+  #app .chk{display:flex;align-items:center;gap:11px;padding:11px 8px;
+    border-bottom:1px solid var(--line);width:100%;text-align:left}
+  #app .chk .box{width:15px;height:15px;border:1px solid var(--gold2);flex:0 0 auto;
+    transform:rotate(45deg);transition:background .2s,transform .35s cubic-bezier(.3,1.5,.5,1),
+      box-shadow .2s}
+  #app .chk.on .box{transform:rotate(225deg)}
+  #app .chk.on .box{background:var(--leaf);border-color:var(--leaf);
+    box-shadow:0 0 10px rgba(149,210,104,.85)}
+  #app .chk .t{flex:1;font-family:var(--serif);font-size:14.5px;color:var(--gold)}
+  #app .chk.on .t{color:var(--leaf)}
+
+  #app .note{font-size:11.5px;line-height:1.55;color:var(--mute);font-family:var(--serif);
+    font-style:italic;margin:14px 0 6px}
+  #app .foot{display:flex;justify-content:space-between;align-items:center;gap:8px;
+    padding:10px 2px 12px;font-size:8.5px;letter-spacing:.14em;color:var(--mute);
+    border-top:1px solid var(--line);margin-top:8px}
+  #app .foot .msg{flex:1;color:var(--am)}
+  #app .foot .rs{padding:5px 8px;border:1px solid var(--line);color:var(--mute)}
+  @media (prefers-reduced-motion:reduce){#app *{animation:none!important;transition:none!important}}
+</style>
+
+<script>
+(function(){
+  var KEY="hyrule:v1";
+
+  /* Map completion: the in-game counter is 1246 things. */
+  var MAP=[
+    {id:"shrines",name:"Shrines",target:120,note:"120 in the base game. The 16 Champions' Ballad shrines do not count toward the map percentage."},
+    {id:"locations",name:"Named locations",target:226,note:"Every place with a name that appears when you walk into it - stables, villages, peaks, ruins, springs."},
+    {id:"koroks",name:"Korok seeds",target:900,note:"72% of the entire percentage. This is the whole job."}
+  ];
+  /* Everything the percentage ignores. */
+  var EXTRA=[
+    {id:"beasts",name:"Divine Beasts",target:4,note:"Ruta, Rudania, Medoh, Naboris. Each gives a heart container and a Champion ability."},
+    {id:"sidequests",name:"Side quests",target:76,note:"Base game. Tracked in your Adventure Log."},
+    {id:"shrinequests",name:"Shrine quests",target:42,note:"The puzzles that reveal a hidden shrine. Logged separately from side quests."},
+    {id:"memories",name:"Captured Memories",target:13,note:"12 photo locations plus the one Impa gives you once you've found them all."},
+    {id:"fairies",name:"Great Fairies",target:4,note:"Cotera, Kaysa, Mija, Tera. All four are needed to fully upgrade any armor."},
+    {id:"compendium",name:"Hyrule Compendium",target:385,note:"Photograph every creature, monster, material, weapon and treasure for Symin."}
+  ];
+  var DLC=[
+    {id:"dlcshrines",name:"Champions' Ballad shrines",target:16,note:"Four per Divine Beast trial, then Maz Koshia."},
+    {id:"trial",name:"Trial of the Sword",target:3,note:"Beginning, Middle and Final. Clearing all three takes the Master Sword to 60 damage permanently."}
+  ];
+  var ONEOFF=[
+    {id:"msword",name:"Pull the Master Sword"},
+    {id:"ganon",name:"Defeat Calamity Ganon"},
+    {id:"hestu",name:"Max out every inventory slot with Hestu"},
+    {id:"horse",name:"Register a horse at every stable"},
+    {id:"medals",name:"Medals of Honor from Kilton"},
+    {id:"armor",name:"Fully upgrade a full armor set"},
+    {id:"cycle",name:"Unlock the Master Cycle Zero"},
+    {id:"mask",name:"Find the Korok Mask"}
+  ];
+
+  var TOTMAP=1246, DASH=2*Math.PI*78;
+  function ticks(){
+    var out="",cx=100,cy=100;
+    for(var i=0;i<36;i++){
+      var a=(i*10-90)*Math.PI/180,big=i%3===0,r1=big?90:93,r2=97;
+      out+='<line x1="'+(cx+Math.cos(a)*r1).toFixed(1)+'" y1="'+(cy+Math.sin(a)*r1).toFixed(1)+
+        '" x2="'+(cx+Math.cos(a)*r2).toFixed(1)+'" y2="'+(cy+Math.sin(a)*r2).toFixed(1)+
+        '" stroke="'+(big?"rgba(95,227,245,.8)":"rgba(95,227,245,.28)")+'" stroke-width="'+(big?1.5:1)+'"/>';
+    }
+    return out;
+  }
+  var S={counts:{},flags:{},tab:"map"};
+  var app=document.getElementById("app"),el={},msgT=null,dirty=false,writing=false,again=false;
+
+  function initCounts(){
+    MAP.concat(EXTRA,DLC).forEach(function(r){if(typeof S.counts[r.id]!=="number")S.counts[r.id]=0});
+    ONEOFF.forEach(function(r){if(typeof S.flags[r.id]!=="boolean")S.flags[r.id]=false});
+  }
+  function mapDone(){return (S.counts.shrines||0)+(S.counts.locations||0)+(S.counts.koroks||0)}
+  function mapPct(){return mapDone()/TOTMAP*100}
+  function everything(){
+    var done=mapDone(),tot=TOTMAP;
+    EXTRA.concat(DLC).forEach(function(r){done+=Math.min(S.counts[r.id]||0,r.target);tot+=r.target});
+    ONEOFF.forEach(function(r){if(S.flags[r.id])done++;tot++});
+    return done/tot*100;
+  }
+
+  /* ---- procedural glyph script (abstract, not a real alphabet) ---- */
+  function seeded(str){var h=2166136261;for(var i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}
+    return function(){h+=0x6D2B79F5;var t=h;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);
+      return((t^t>>>14)>>>0)/4294967296}}
+  var FORMS=["M1.5 1.5h6v8h-6z M4.5 3.5v4","M1.5 1.5v8 M7.5 1.5v8 M1.5 5.5h6",
+    "M4.5 1.5v8 M1.5 3h6 M1.5 8h6","M1.5 2.5h6 M4.5 2.5v7 M2 9.5h5",
+    "M1.5 5.5a3 3 0 0 1 6 0 M4.5 5.5v4 M1.5 9.5h6","M1.5 1.5h6 M1.5 1.5v8h6 M4 5.5h3.5",
+    "M1.5 9.5l3-8 3 8 M2.6 6.5h3.8","M1.5 1.5h6v3h-6z M4.5 4.5v5","M1.5 3.5h6 M1.5 7.5h6 M4.5 1.5v8"];
+  function glyphs(seed,n,color,op){
+    var rnd=seeded(seed),w=9,p="";
+    for(var i=0;i<n;i++){
+      var f=FORMS[Math.floor(rnd()*FORMS.length)];
+      p+='<g transform="translate('+(i*w)+',0)"><path d="'+f+'" fill="none" stroke="'+color+
+         '" stroke-width="1" stroke-linecap="square"/>';
+      if(rnd()>.62)p+='<circle cx="'+(2+rnd()*5).toFixed(1)+'" cy="'+(2+rnd()*6).toFixed(1)+
+         '" r=".8" fill="'+color+'"/>';
+      p+='</g>';
+    }
+    return '<svg class="gl" viewBox="0 0 '+(n*w)+' 11" width="'+(n*w*0.78)+'" height="7" style="opacity:'+
+      (op||.8)+'">'+p+'</svg>';
+  }
+  function ornTile(vertical){
+    var motif='<path d="M0 20 h64" stroke="#B98B2E" stroke-width="1.6" fill="none"/>'+
+      '<path d="M0 20 q8 -15 16 0 q8 15 16 0 q8 -15 16 0 q8 15 16 0" fill="none" stroke="#E6C378" stroke-width="2.2"/>'+
+      '<path d="M0 20 q8 -15 16 0 q8 15 16 0 q8 -15 16 0 q8 15 16 0" fill="none" stroke="#7FE9FA" stroke-width="0.7" opacity=".75"/>'+
+      '<g fill="#E6C378"><rect x="14" y="18" width="4" height="4" transform="rotate(45 16 20)"/>'+
+      '<rect x="46" y="18" width="4" height="4" transform="rotate(45 48 20)"/></g>'+
+      '<circle cx="32" cy="20" r="2.6" fill="none" stroke="#E6C378" stroke-width="1.2"/>'+
+      '<circle cx="32" cy="20" r="1" fill="#7FE9FA"/>'+
+      '<path d="M0 6 h64" stroke="#7A5A1C" stroke-width="1" opacity=".8"/>';
+    var svg=vertical
+      ? '<svg xmlns="http://www.w3.org/2000/svg" width="26" height="64" viewBox="0 0 26 64">'+
+        '<g transform="rotate(90 13 13) translate(-13 -13)">'+motif+'</g></svg>'
+      : '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="26" viewBox="0 0 64 26">'+motif+'</svg>';
+    return 'url("data:image/svg+xml,'+encodeURIComponent(svg)+'")';
+  }
+
+  /* ---- storage ---- */
+  var DB=null;
+  function mirror(j){try{localStorage.setItem(KEY,j);return true}catch(e){return false}}
+  function stampOf(raw){if(!raw)return -1;try{return +JSON.parse(raw).stamp||0}catch(e){return -1}}
+  function flush(){try{S.stamp=Date.now();mirror(JSON.stringify(S))}catch(e){}}
+  async function initStore(){
+    try{ if(window.claude&&claude.use) DB=await claude.use("db"); }catch(e){ DB=null; }
+  }
+  async function getState(){
+    var local=null,remote=null;
+    try{ local=localStorage.getItem(KEY) }catch(e){}
+    if(DB){ try{ var d=await DB.doc("state/hyrule").get();
+      if(d.exists){ var v=d.data(); if(v&&typeof v.json==="string") remote=v.json } }catch(e){} }
+    if(local&&remote) return stampOf(local)>stampOf(remote)?local:remote;
+    return remote||local;
+  }
+  async function save(){
+    dirty=true;S.stamp=Date.now();
+    if(writing){again=true;return}
+    writing=true;
+    var j=JSON.stringify(S),ok=mirror(j);          /* synchronous first - survives an instant close */
+    if(DB){ try{ await DB.doc("state/hyrule").set({json:j,at:new Date().toISOString()});ok=true }catch(e){} }
+    msg(ok?"▸ RECORDED":"▸ NOT SAVED · SESSION ONLY");
+    writing=false;
+    if(again){again=false;save()}
+  }
+  function msg(t){if(!el.msg)return;el.msg.textContent=t;clearTimeout(msgT);
+    msgT=setTimeout(function(){el.msg.textContent=""},1600)}
+  function apply(raw){
+    if(!raw)return;
+    try{var v=JSON.parse(raw);
+      if(v.counts)S.counts=v.counts; if(v.flags)S.flags=v.flags; if(v.tab)S.tab=v.tab;
+    }catch(e){}
+  }
+  async function load(){
+    var raw=null;try{raw=localStorage.getItem(KEY)}catch(e){}
+    apply(raw);initCounts();build();paint(true);        /* draw at once, never wait on the store */
+    await initStore();
+    var best=null;try{best=await getState()}catch(e){}
+    if(!dirty&&best&&best!==raw){apply(best);initCounts();build();paint(true)}
+  }
+
+  function bump(id,n){
+    var r=MAP.concat(EXTRA,DLC).filter(function(x){return x.id===id})[0];if(!r)return;
+    var v=(S.counts[id]||0)+n;
+    if(v<0)v=0; if(v>r.target)v=r.target;
+    S.counts[id]=v;paint();save();
+    var row=app.querySelector('[data-it="'+id+'"]');
+    if(row&&n>0){row.classList.remove("lit");void row.offsetWidth;row.classList.add("lit")}
+  }
+
+  function itemRow(r){
+    var big=r.target>=100;
+    return '<div class="it" data-it="'+r.id+'">'+
+      '<div class="top"><span class="nm">'+r.name+'</span>'+
+        '<span class="ct"><b>0</b> / '+r.target+'</span>'+
+        '<button class="btn" data-minus="'+r.id+'" aria-label="One fewer '+r.name+'">&minus;</button>'+
+        '<button class="btn" data-plus="'+r.id+'" aria-label="One more '+r.name+'">+</button>'+
+        (big?'<button class="btn ten" data-ten="'+r.id+'" aria-label="Ten more '+r.name+'">+10</button>':'')+
+      '</div>'+
+      (r.note?'<span class="note" style="margin:4px 0 0;font-style:normal;font-family:var(--sans)">'+r.note+'</span>':'')+
+      '<span class="bar"><em style="width:0"></em></span>'+
+      '<span class="wt"></span></div>';
+  }
+
+  function build(){
+    app.innerHTML=
+    '<div class="frame">'+
+      '<i class="orn t"></i><i class="orn b"></i><i class="orn l"></i><i class="orn r"></i>'+
+      '<div class="screen"><div class="sweep"></div>'+
+        '<div class="hud">'+
+          '<div class="blk"><span class="v">HYRULE</span>'+glyphs("hyrule",8,"#5FE3F5",.75)+'COMPLETION LOG</div>'+
+          '<div class="blk r"><span class="v ev">0.0%</span>'+glyphs("everything",6,"#5FE3F5",.75)+'EVERYTHING</div>'+
+        '</div>'+
+
+        '<div class="big"><div class="dial"><svg viewBox="0 0 200 200">'+
+            '<g class="spin">'+ticks()+'</g>'+
+            '<circle class="halo" cx="100" cy="100" r="78" fill="none" stroke="#5FE3F5" stroke-width="14" opacity=".18"/>'+
+            '<circle cx="100" cy="100" r="78" fill="none" stroke="#0C2A36" stroke-width="6"/>'+
+            '<g class="rot"><circle class="arc" cx="100" cy="100" r="78" fill="none" stroke="#95D268"'+
+              ' stroke-width="6" stroke-linecap="round" stroke-dasharray="'+DASH+'" stroke-dashoffset="'+DASH+'"/></g>'+
+            '<circle cx="100" cy="100" r="66" fill="none" stroke="rgba(230,195,120,.16)" stroke-width="1"/>'+
+            '</svg><div class="mid"><span class="pc">0.00%</span>'+
+            '<span class="lb">MAP COMPLETION</span></div></div>'+
+          '<div class="sub"><span class="done">0</span> of 1,246 · <span class="left">1,246</span> left</div></div>'+
+
+        '<div class="tabs">'+
+          '<button data-tab="map" class="on">THE COUNTER</button>'+
+          '<button data-tab="extra">BEYOND IT</button>'+
+          '<button data-tab="dlc">DLC &amp; ONE-OFFS</button></div>'+
+
+        '<div class="pane on" data-pane="map"><h4>WHAT THE PERCENTAGE COUNTS</h4>'+
+          MAP.map(itemRow).join("")+
+          '<p class="note">These three are the whole of the in-game counter - 1,246 things, each worth 0.08%. '+
+          'Nothing else on this slate moves that number.</p></div>'+
+
+        '<div class="pane" data-pane="extra"><h4>WHAT IT IGNORES</h4>'+
+          EXTRA.map(itemRow).join("")+
+          '<p class="note">None of this touches the map percentage, and all of it is usually what people '+
+          'mean by finishing the game.</p></div>'+
+
+        '<div class="pane" data-pane="dlc"><h4>EXPANSION PASS</h4>'+
+          DLC.map(itemRow).join("")+
+          '<h4 style="margin-top:18px">MILESTONES</h4>'+
+          ONEOFF.map(function(r){return '<button class="chk" data-flag="'+r.id+'">'+
+            '<span class="box"></span><span class="t">'+r.name+'</span></button>'}).join("")+
+        '</div>'+
+
+        '<div class="foot"><span class="msg"></span><span class="ev2"></span>'+
+          '<button class="rs" data-reset="1">RESET</button></div>'+
+      '</div>'+
+    '</div>';
+
+    app.querySelector(".orn.t").style.background=ornTile(false)+" repeat-x center";
+    app.querySelector(".orn.b").style.background=ornTile(false)+" repeat-x center";
+    app.querySelector(".orn.l").style.background=ornTile(true)+" repeat-y center";
+    app.querySelector(".orn.r").style.background=ornTile(true)+" repeat-y center";
+
+    el.pc=app.querySelector(".big .pc");el.arc=app.querySelector(".arc");
+    el.dial=app.querySelector(".dial");
+    el.done=app.querySelector(".done");el.left=app.querySelector(".left");
+    el.ev=app.querySelector(".ev");el.ev2=app.querySelector(".ev2");el.msg=app.querySelector(".msg");
+    setTab(S.tab);
+    setTimeout(function(){var s=app.querySelector(".sweep");if(s)s.remove()},1400);
+  }
+
+  function setTab(t){
+    S.tab=t;
+    [].forEach.call(app.querySelectorAll(".tabs button"),function(b){b.className=b.dataset.tab===t?"on":""});
+    [].forEach.call(app.querySelectorAll(".pane"),function(p){p.className="pane"+(p.dataset.pane===t?" on":"")});
+  }
+
+  var shown={};
+  function tween(key,to,ms,draw){
+    var from=(typeof shown[key]==="number")?shown[key]:to,t0=performance.now();
+    if(from===to){shown[key]=to;draw(to);return}
+    (function step(now){
+      var k=Math.min(1,(now-t0)/ms),e=1-Math.pow(1-k,3);
+      var v=from+(to-from)*e;
+      draw(v);
+      if(k<1)requestAnimationFrame(step);else shown[key]=to;
+    })(t0);
+    shown[key]=to;
+  }
+
+  function paint(silent){
+    var pct=mapPct(),d=mapDone();
+    tween("pct",pct,650,function(v){el.pc.textContent=v.toFixed(2)+"%"});
+    tween("done",d,650,function(v){
+      el.done.textContent=Math.round(v).toLocaleString();
+      el.left.textContent=Math.round(TOTMAP-v).toLocaleString()});
+    el.arc.setAttribute("stroke-dashoffset",DASH-Math.min(1,pct/100)*DASH);
+    var ev=everything();
+    tween("ev",ev,650,function(v){el.ev.textContent=v.toFixed(1)+"%";
+      el.ev2.textContent="EVERYTHING "+v.toFixed(1)+"%"});
+    if(!silent){el.dial.classList.remove("hit");void el.dial.offsetWidth;el.dial.classList.add("hit")}
+
+    MAP.concat(EXTRA,DLC).forEach(function(r){
+      var row=app.querySelector('[data-it="'+r.id+'"]');if(!row)return;
+      var c=S.counts[r.id]||0;
+      row.className="it"+(c>=r.target?" done":"");
+      row.querySelector(".ct b").textContent=c;
+      row.querySelector(".bar em").style.width=(r.target?Math.min(100,c/r.target*100):0)+"%";
+      var wt=row.querySelector(".wt");
+      if(r.id==="shrines"||r.id==="locations"||r.id==="koroks"){
+        wt.textContent=(r.target/TOTMAP*100).toFixed(1)+"% OF THE MAP · "+
+          (c/TOTMAP*100).toFixed(2)+"% EARNED";
+      } else {
+        wt.textContent=(r.target?Math.round(c/r.target*100):0)+"% DONE · NO EFFECT ON THE COUNTER";
+      }
+    });
+    ONEOFF.forEach(function(r){
+      var b=app.querySelector('[data-flag="'+r.id+'"]');if(!b)return;
+      b.className="chk"+(S.flags[r.id]?" on":"");
+    });
+  }
+
+  app.addEventListener("click",function(e){
+    var b=e.target.closest("button");if(!b)return;
+    if(b.dataset.tab)return setTab(b.dataset.tab),save();
+    if(b.dataset.plus)return bump(b.dataset.plus,1);
+    if(b.dataset.minus)return bump(b.dataset.minus,-1);
+    if(b.dataset.ten)return bump(b.dataset.ten,10);
+    if(b.dataset.flag){S.flags[b.dataset.flag]=!S.flags[b.dataset.flag];paint();save();return}
+    if(b.dataset.reset){if(confirm("Clear every count on this slate?")){
+      S.counts={};S.flags={};initCounts();paint();save()}}
+  });
+
+  ["pagehide","visibilitychange","freeze","blur"].forEach(function(ev){
+    window.addEventListener(ev,function(){
+      if(ev==="visibilitychange"&&document.visibilityState!=="hidden")return;
+      flush();
+    });
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>
